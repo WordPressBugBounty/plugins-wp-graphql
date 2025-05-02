@@ -159,9 +159,7 @@ class WPMutationType {
 		$input_fields = [
 			'clientMutationId' => [
 				'type'        => 'String',
-				'description' => static function () {
-					return __( 'This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.', 'wp-graphql' );
-				},
+				'description' => __( 'This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.', 'wp-graphql' ),
 			],
 		];
 
@@ -181,9 +179,7 @@ class WPMutationType {
 		$output_fields = [
 			'clientMutationId' => [
 				'type'        => 'String',
-				'description' => static function () {
-					return __( 'If a \'clientMutationId\' input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.', 'wp-graphql' );
-				},
+				'description' => __( 'If a \'clientMutationId\' input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.', 'wp-graphql' ),
 			],
 		];
 
@@ -281,10 +277,7 @@ class WPMutationType {
 			$input_name,
 			[
 				// translators: %s is the name of the mutation.
-				'description'       => function () {
-					// translators: %s is the name of the mutation.
-					return sprintf( __( 'Input for the %1$s mutation.', 'wp-graphql' ), $this->mutation_name );
-				},
+				'description'       => sprintf( __( 'Input for the %1$s mutation.', 'wp-graphql' ), $this->mutation_name ),
 				'fields'            => $this->input_fields,
 				'deprecationReason' => ! empty( $this->config['deprecationReason'] ) ? $this->config['deprecationReason'] : null,
 			]
@@ -305,10 +298,7 @@ class WPMutationType {
 			$object_name,
 			[
 				// translators: %s is the name of the mutation.
-				'description'       => function () {
-					// translators: %s is the name of the mutation.
-					return sprintf( __( 'The payload for the %s mutation.', 'wp-graphql' ), $this->mutation_name );
-				},
+				'description'       => sprintf( __( 'The payload for the %s mutation.', 'wp-graphql' ), $this->mutation_name ),
 				'fields'            => $this->output_fields,
 				'deprecationReason' => ! empty( $this->config['deprecationReason'] ) ? $this->config['deprecationReason'] : null,
 			]
@@ -327,18 +317,14 @@ class WPMutationType {
 				'args'        => [
 					'input' => [
 						'type'              => [ 'non_null' => $this->mutation_name . 'Input' ],
-						'description'       => function () {
-							// translators: %s is the name of the mutation.
-							return sprintf( __( 'Input for the %s mutation', 'wp-graphql' ), $this->mutation_name );
-						},
+						// translators: %s is the name of the mutation.
+						'description'       => sprintf( __( 'Input for the %s mutation', 'wp-graphql' ), $this->mutation_name ),
 						'deprecationReason' => ! empty( $this->config['deprecationReason'] ) ? $this->config['deprecationReason'] : null,
 					],
 				],
 				'auth'        => $this->auth,
-				'description' => function () {
-					// translators: %s is the name of the mutation.
-					return ! empty( $this->config['description'] ) ? $this->config['description'] : sprintf( __( 'The %s mutation', 'wp-graphql' ), $this->mutation_name );
-				},
+				// translators: %s is the name of the mutation.
+				'description' => ! empty( $this->config['description'] ) ? $this->config['description'] : sprintf( __( 'The %s mutation', 'wp-graphql' ), $this->mutation_name ),
 				'isPrivate'   => $this->is_private,
 				'type'        => $this->mutation_name . 'Payload',
 				'resolve'     => $this->resolve_mutation,

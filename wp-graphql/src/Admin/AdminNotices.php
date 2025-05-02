@@ -11,13 +11,6 @@ namespace WPGraphQL\Admin;
  * Breaking changes to this class will not be considered a semver breaking change as there's no
  * expectation that users will be calling these functions directly or extending this class.
  *
- * @phpstan-type AdminNoticeConfig array{
- *   message: string,
- *   type?: 'error'|'warning'|'success'|'info',
- *   is_dismissable?: bool,
- *   conditions?: callable():bool,
- * }
- *
  * @internal
  */
 class AdminNotices {
@@ -32,7 +25,7 @@ class AdminNotices {
 	/**
 	 * Stores the admin notices to display
 	 *
-	 * @var array<string,AdminNoticeConfig>
+	 * @var array<string,array<string,mixed>>
 	 */
 	protected $admin_notices = [];
 
@@ -139,29 +132,29 @@ class AdminNotices {
 	/**
 	 * Return all admin notices
 	 *
-	 * @return array<string,AdminNoticeConfig>
+	 * @return array<string,array<string,mixed>>
 	 */
 	public function get_admin_notices(): array {
 		return $this->admin_notices;
 	}
 
 	/**
-	 * @param string            $slug   The slug identifying the admin notice
-	 * @param AdminNoticeConfig $config The config of the admin notice
+	 * @param string              $slug The slug identifying the admin notice
+	 * @param array<string,mixed> $config The config of the admin notice
 	 *
-	 * @return AdminNoticeConfig|array{}
+	 * @return array<string,mixed>
 	 */
 	public function add_admin_notice( string $slug, array $config ): array {
 		/**
 		 * Pass the notice through a filter before registering it
 		 *
-		 * @param AdminNoticeConfig $config The config of the admin notice
-		 * @param string            $slug   The slug identifying the admin notice
+		 * @param array<string,mixed> $config The config of the admin notice
+		 * @param string              $slug   The slug identifying the admin notice
 		 */
 		$filtered_notice = apply_filters( 'graphql_add_admin_notice', $config, $slug );
 
 		// If not a valid config, bail early.
-		if ( ! $this->is_valid_config( $filtered_notice ) ) {
+		if ( ! $this->is_valid_config( $config ) ) {
 			return [];
 		}
 
@@ -175,13 +168,6 @@ class AdminNotices {
 	 * @since v1.21.0
 	 *
 	 * @param array<string,mixed> $config The config of the admin notice
-	 *
-	 * @phpstan-assert-if-true array{
-	 *  message: string,
-	 *  type?: 'error'|'warning'|'success'|'info',
-	 *  is_dismissable?: bool,
-	 *  conditions?: callable,
-	 * } $config
 	 */
 	public function is_valid_config( array $config ): bool {
 		if ( empty( $config['message'] ) ) {
@@ -212,7 +198,7 @@ class AdminNotices {
 	 *
 	 * @param string $slug The slug identifying the admin notice to remove
 	 *
-	 * @return array<string,AdminNoticeConfig>
+	 * @return array<mixed>
 	 */
 	public function remove_admin_notice( string $slug ): array {
 		unset( $this->admin_notices[ $slug ] );
@@ -222,7 +208,7 @@ class AdminNotices {
 	/**
 	 * Determine whether a notice is dismissable or not
 	 *
-	 * @param AdminNoticeConfig|array{} $notice The notice to check whether its dismissable or not
+	 * @param array<mixed> $notice The notice to check whether its dismissable or not
 	 */
 	public function is_notice_dismissable( array $notice = [] ): bool {
 		return ( ! isset( $notice['is_dismissable'] ) || false !== (bool) $notice['is_dismissable'] );
@@ -302,7 +288,7 @@ class AdminNotices {
 		/**
 		 * Fires before the admin notices are rendered.
 		 *
-		 * @param array<string,AdminNoticeConfig> $notices The notices to be rendered
+		 * @param array<string,mixed> $notices The notices to be rendered
 		 *
 		 * @since v1.23.0
 		 */
@@ -339,7 +325,7 @@ class AdminNotices {
 			 * Fires for each admin notice that is rendered.
 			 *
 			 * @param string $notice_slug The slug of the notice
-			 * @param AdminNoticeConfig $notice The notice to be rendered
+			 * @param array<mixed> $notice The notice to be rendered
 			 * @param bool $is_dismissable Whether the notice is dismissable or not
 			 * @param int $count The count of the notice
 			 *

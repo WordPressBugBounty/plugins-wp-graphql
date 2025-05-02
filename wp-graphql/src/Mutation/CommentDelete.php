@@ -36,15 +36,11 @@ class CommentDelete {
 				'type'        => [
 					'non_null' => 'ID',
 				],
-				'description' => static function () {
-					return __( 'The deleted comment ID', 'wp-graphql' );
-				},
+				'description' => __( 'The deleted comment ID', 'wp-graphql' ),
 			],
 			'forceDelete' => [
 				'type'        => 'Boolean',
-				'description' => static function () {
-					return __( 'Whether the comment should be force deleted instead of being moved to the trash', 'wp-graphql' );
-				},
+				'description' => __( 'Whether the comment should be force deleted instead of being moved to the trash', 'wp-graphql' ),
 			],
 		];
 	}
@@ -58,9 +54,7 @@ class CommentDelete {
 		return [
 			'deletedId' => [
 				'type'        => 'Id',
-				'description' => static function () {
-					return __( 'The deleted comment ID', 'wp-graphql' );
-				},
+				'description' => __( 'The deleted comment ID', 'wp-graphql' ),
 				'resolve'     => static function ( $payload ) {
 					$deleted = (object) $payload['commentObject'];
 
@@ -69,9 +63,7 @@ class CommentDelete {
 			],
 			'comment'   => [
 				'type'        => 'Comment',
-				'description' => static function () {
-					return __( 'The deleted comment object', 'wp-graphql' );
-				},
+				'description' => __( 'The deleted comment object', 'wp-graphql' ),
 				'resolve'     => static function ( $payload ) {
 					return $payload['commentObject'] ? $payload['commentObject'] : null;
 				},

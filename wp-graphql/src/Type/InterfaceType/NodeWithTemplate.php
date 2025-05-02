@@ -16,20 +16,14 @@ class NodeWithTemplate {
 		register_graphql_interface_type(
 			'NodeWithTemplate',
 			[
-				'description' => static function () {
-					return __( 'Content that provides template metadata. The template can help inform how the content is might be structured, styled, and presented to the user.', 'wp-graphql' );
-				},
+				'description' => __( 'A node that can have a template associated with it', 'wp-graphql' ),
 				'interfaces'  => [ 'Node' ],
-				'fields'      => static function () {
-					return [
-						'template' => [
-							'description' => static function () {
-								return __( 'The template assigned to the node', 'wp-graphql' );
-							},
-							'type'        => 'ContentTemplate',
-						],
-					];
-				},
+				'fields'      => [
+					'template' => [
+						'description' => __( 'The template assigned to the node', 'wp-graphql' ),
+						'type'        => 'ContentTemplate',
+					],
+				],
 			]
 		);
 	}

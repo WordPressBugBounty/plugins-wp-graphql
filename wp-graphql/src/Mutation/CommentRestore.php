@@ -40,9 +40,7 @@ class CommentRestore {
 				'type'        => [
 					'non_null' => 'ID',
 				],
-				'description' => static function () {
-					return __( 'The ID of the comment to be restored', 'wp-graphql' );
-				},
+				'description' => __( 'The ID of the comment to be restored', 'wp-graphql' ),
 			],
 		];
 	}
@@ -56,9 +54,7 @@ class CommentRestore {
 		return [
 			'restoredId' => [
 				'type'        => 'Id',
-				'description' => static function () {
-					return __( 'The ID of the restored comment', 'wp-graphql' );
-				},
+				'description' => __( 'The ID of the restored comment', 'wp-graphql' ),
 				'resolve'     => static function ( $payload ) {
 					$restore = (object) $payload['commentObject'];
 
@@ -67,9 +63,7 @@ class CommentRestore {
 			],
 			'comment'    => [
 				'type'        => 'Comment',
-				'description' => static function () {
-					return __( 'The restored comment object', 'wp-graphql' );
-				},
+				'description' => __( 'The restored comment object', 'wp-graphql' ),
 				'resolve'     => static function ( $payload, $args, AppContext $context ) {
 					if ( ! isset( $payload['commentObject']->comment_ID ) || ! absint( $payload['commentObject']->comment_ID ) ) {
 						return null;

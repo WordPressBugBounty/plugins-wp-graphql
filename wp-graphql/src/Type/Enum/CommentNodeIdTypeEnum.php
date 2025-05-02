@@ -17,23 +17,17 @@ class CommentNodeIdTypeEnum {
 		register_graphql_enum_type(
 			'CommentNodeIdTypeEnum',
 			[
-				'description' => static function () {
-					return __( 'Identifier types for retrieving a specific comment. Specifies which unique attribute is used to find a particular comment.', 'wp-graphql' );
-				},
+				'description' => __( 'The Type of Identifier used to fetch a single comment node. Default is "ID". To be used along with the "id" field.', 'wp-graphql' ),
 				'values'      => [
 					'ID'          => [
 						'name'        => 'ID',
 						'value'       => 'global_id',
-						'description' => static function () {
-							return __( 'Identify a resource by the (hashed) Global ID.', 'wp-graphql' );
-						},
+						'description' => __( 'Identify a resource by the (hashed) Global ID.', 'wp-graphql' ),
 					],
 					'DATABASE_ID' => [
 						'name'        => 'DATABASE_ID',
 						'value'       => 'database_id',
-						'description' => static function () {
-							return __( 'Identify a resource by the Database ID.', 'wp-graphql' );
-						},
+						'description' => __( 'Identify a resource by the Database ID.', 'wp-graphql' ),
 					],
 				],
 			]

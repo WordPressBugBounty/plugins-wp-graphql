@@ -284,7 +284,7 @@ abstract class AbstractDataLoader {
 	 * @return array<int|string,mixed>
 	 * @throws \Exception
 	 */
-	private function load_buffered(): array {
+	private function load_buffered() {
 		// Do not load previously-cached entries:
 		$keysToLoad = [];
 		foreach ( $this->buffer as $key => $unused ) {
@@ -331,8 +331,10 @@ abstract class AbstractDataLoader {
 	 * This helps to ensure null values aren't being loaded by accident.
 	 *
 	 * @param mixed $key
+	 *
+	 * @return string
 	 */
-	private function get_scalar_key_hint( $key ): string {
+	private function get_scalar_key_hint( $key ) {
 		if ( null === $key ) {
 			return ' Make sure to add additional checks for null values.';
 		} else {

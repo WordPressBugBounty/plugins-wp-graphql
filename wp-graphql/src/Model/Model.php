@@ -7,10 +7,6 @@ use Exception;
 /**
  * Class Model - Abstract class for modeling data for all core types
  *
- * @property bool $isPrivate
- * @property bool $isPublic
- * @property bool $isRestricted
- *
  * @package WPGraphQL\Model
  */
 abstract class Model {
@@ -434,8 +430,10 @@ abstract class Model {
 
 	/**
 	 * Adds the model visibility fields to the data
+	 *
+	 * @return void
 	 */
-	private function add_model_visibility(): void {
+	private function add_model_visibility() {
 
 		/**
 		 * @todo: potentially abstract this out into a more central spot

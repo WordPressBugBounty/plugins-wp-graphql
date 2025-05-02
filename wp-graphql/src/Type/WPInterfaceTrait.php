@@ -115,11 +115,6 @@ trait WPInterfaceTrait {
 	 * @throws \Exception
 	 */
 	protected function get_fields( array $config, TypeRegistry $type_registry ): array {
-
-		if ( is_callable( $config['fields'] ) ) {
-			$config['fields'] = $config['fields']();
-		}
-
 		$fields = array_filter( $config['fields'] );
 
 		/**

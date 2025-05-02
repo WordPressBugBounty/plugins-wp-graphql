@@ -8,11 +8,11 @@ use WP_Comment;
 /**
  * Class CommentAuthor - Models the CommentAuthor object
  *
- * @property ?int    $databaseId
- * @property ?string $email
- * @property ?string $id
- * @property ?string $name
- * @property ?string $url
+ * @property string $id
+ * @property int    $databaseId
+ * @property string $name
+ * @property string $email
+ * @property string $url
  *
  * @package WPGraphQL\Model
  */
@@ -41,17 +41,17 @@ class CommentAuthor extends Model {
 	protected function init() {
 		if ( empty( $this->fields ) ) {
 			$this->fields = [
+				'id'         => function () {
+					return ! empty( $this->data->comment_ID ) ? Relay::toGlobalId( 'comment_author', $this->data->comment_ID ) : null;
+				},
 				'databaseId' => function () {
 					return ! empty( $this->data->comment_ID ) ? absint( $this->data->comment_ID ) : null;
 				},
-				'email'      => function () {
-					return current_user_can( 'moderate_comments' ) && ! empty( $this->data->comment_author_email ) ? $this->data->comment_author_email : null;
-				},
-				'id'         => function () {
-					return ! empty( $this->databaseId ) ? Relay::toGlobalId( 'comment_author', (string) $this->databaseId ) : null;
-				},
 				'name'       => function () {
 					return ! empty( $this->data->comment_author ) ? $this->data->comment_author : null;
+				},
+				'email'      => function () {
+					return current_user_can( 'moderate_comments' ) && ! empty( $this->data->comment_author_email ) ? $this->data->comment_author_email : null;
 				},
 				'url'        => function () {
 					return ! empty( $this->data->comment_author_url ) ? $this->data->comment_author_url : '';

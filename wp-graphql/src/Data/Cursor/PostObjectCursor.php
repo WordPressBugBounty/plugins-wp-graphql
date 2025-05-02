@@ -173,8 +173,10 @@ class PostObjectCursor extends AbstractCursor {
 	 *
 	 * @param string $by    The order by key
 	 * @param string $order The order direction ASC or DESC
+	 *
+	 * @return void
 	 */
-	private function compare_with( $by, $order ): void {
+	private function compare_with( $by, $order ) {
 		// Bail early, if "key" and "value" provided in query_vars.
 		$key   = $this->get_query_var( "graphql_cursor_compare_by_{$by}_key" );
 		$value = $this->get_query_var( "graphql_cursor_compare_by_{$by}_value" );
@@ -221,8 +223,10 @@ class PostObjectCursor extends AbstractCursor {
 	 *
 	 * @param string $meta_key post meta key
 	 * @param string $order    The comparison string
+	 *
+	 * @return void
 	 */
-	private function compare_with_meta_field( string $meta_key, string $order ): void {
+	private function compare_with_meta_field( string $meta_key, string $order ) {
 		$meta_type  = $this->get_query_var( 'meta_type' );
 		$meta_value = get_post_meta( $this->cursor_offset, $meta_key, true );
 

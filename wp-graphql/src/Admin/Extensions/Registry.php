@@ -13,11 +13,6 @@ namespace WPGraphQL\Admin\Extensions;
 /**
  * Class Registry
  *
- * phpcs:disable -- For phpstan type hinting
- * @phpstan-type ExtensionAuthor array{
- *  name: string,
- *  homepage?: string,
- * }
  * @phpstan-type Extension array{
  *  name: non-empty-string,
  *  description: non-empty-string,
@@ -25,9 +20,11 @@ namespace WPGraphQL\Admin\Extensions;
  *  support_url: non-empty-string,
  *  documentation_url: non-empty-string,
  *  repo_url?: string,
- *  author: ExtensionAuthor,
+ *  author: array{
+ *   name: non-empty-string,
+ *   homepage?: string,
+ *  },
  * }
- * phpcs:enable
  */
 final class Registry {
 	/**

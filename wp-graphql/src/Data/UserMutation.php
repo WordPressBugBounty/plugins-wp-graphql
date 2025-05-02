@@ -31,99 +31,67 @@ class UserMutation {
 			$input_fields = [
 				'password'    => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'A string that contains the plain text password for the user.', 'wp-graphql' );
-					},
+					'description' => __( 'A string that contains the plain text password for the user.', 'wp-graphql' ),
 				],
 				'nicename'    => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'A string that contains a URL-friendly name for the user. The default is the user\'s username.', 'wp-graphql' );
-					},
+					'description' => __( 'A string that contains a URL-friendly name for the user. The default is the user\'s username.', 'wp-graphql' ),
 				],
 				'websiteUrl'  => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'A string containing the user\'s URL for the user\'s web site.', 'wp-graphql' );
-					},
+					'description' => __( 'A string containing the user\'s URL for the user\'s web site.', 'wp-graphql' ),
 				],
 				'email'       => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'A string containing the user\'s email address.', 'wp-graphql' );
-					},
+					'description' => __( 'A string containing the user\'s email address.', 'wp-graphql' ),
 				],
 				'displayName' => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'A string that will be shown on the site. Defaults to user\'s username. It is likely that you will want to change this, for both appearance and security through obscurity (that is if you dont use and delete the default admin user).', 'wp-graphql' );
-					},
+					'description' => __( 'A string that will be shown on the site. Defaults to user\'s username. It is likely that you will want to change this, for both appearance and security through obscurity (that is if you dont use and delete the default admin user).', 'wp-graphql' ),
 				],
 				'nickname'    => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'The user\'s nickname, defaults to the user\'s username.', 'wp-graphql' );
-					},
+					'description' => __( 'The user\'s nickname, defaults to the user\'s username.', 'wp-graphql' ),
 				],
 				'firstName'   => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'The user\'s first name.', 'wp-graphql' );
-					},
+					'description' => __( '	The user\'s first name.', 'wp-graphql' ),
 				],
 				'lastName'    => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'The user\'s last name.', 'wp-graphql' );
-					},
+					'description' => __( 'The user\'s last name.', 'wp-graphql' ),
 				],
 				'description' => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'A string containing content about the user.', 'wp-graphql' );
-					},
+					'description' => __( 'A string containing content about the user.', 'wp-graphql' ),
 				],
 				'richEditing' => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'A string for whether to enable the rich editor or not. False if not empty.', 'wp-graphql' );
-					},
+					'description' => __( 'A string for whether to enable the rich editor or not. False if not empty.', 'wp-graphql' ),
 				],
 				'registered'  => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'The date the user registered. Format is Y-m-d H:i:s.', 'wp-graphql' );
-					},
+					'description' => __( 'The date the user registered. Format is Y-m-d H:i:s.', 'wp-graphql' ),
 				],
 				'roles'       => [
 					'type'        => [ 'list_of' => 'String' ],
-					'description' => static function () {
-						return __( 'An array of roles to be assigned to the user.', 'wp-graphql' );
-					},
+					'description' => __( 'An array of roles to be assigned to the user.', 'wp-graphql' ),
 				],
 				'jabber'      => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'User\'s Jabber account.', 'wp-graphql' );
-					},
+					'description' => __( 'User\'s Jabber account.', 'wp-graphql' ),
 				],
 				'aim'         => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'User\'s AOL IM account.', 'wp-graphql' );
-					},
+					'description' => __( 'User\'s AOL IM account.', 'wp-graphql' ),
 				],
 				'yim'         => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'User\'s Yahoo IM account.', 'wp-graphql' );
-					},
+					'description' => __( 'User\'s Yahoo IM account.', 'wp-graphql' ),
 				],
 				'locale'      => [
 					'type'        => 'String',
-					'description' => static function () {
-						return __( 'User\'s locale.', 'wp-graphql' );
-					},
+					'description' => __( 'User\'s locale.', 'wp-graphql' ),
 				],
 			];
 
@@ -271,9 +239,10 @@ class UserMutation {
 	 * @param int      $user_id The ID of the user
 	 * @param string[] $roles   List of roles that need to get added to the user
 	 *
+	 * @return void
 	 * @throws \Exception
 	 */
-	private static function add_user_roles( $user_id, $roles ): void {
+	private static function add_user_roles( $user_id, $roles ) {
 		if ( empty( $roles ) || ! is_array( $roles ) || ! current_user_can( 'edit_user', $user_id ) ) {
 			return;
 		}
@@ -303,7 +272,7 @@ class UserMutation {
 	 * @param string $role    Name of the role trying to get added to a user object
 	 * @param int    $user_id The ID of the user being mutated
 	 *
-	 * @return true|\WP_Error
+	 * @return bool|\WP_Error
 	 */
 	private static function verify_user_role( $role, $user_id ) {
 		global $wp_roles;
@@ -340,8 +309,8 @@ class UserMutation {
 		if ( empty( $editable_roles[ $role ] ) ) {
 			// Translators: %s is the name of the role that can't be added to the user.
 			return new \WP_Error( 'wpgraphql_user_invalid_role', sprintf( __( 'Sorry, you are not allowed to give this the following role: %s.', 'wp-graphql' ), $role ) );
+		} else {
+			return true;
 		}
-
-		return true;
 	}
 }

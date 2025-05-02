@@ -29,10 +29,8 @@ class TermObjectCreate {
 							'type'        => [
 								'non_null' => 'String',
 							],
-							'description' => static function () use ( $taxonomy ) {
-								// translators: The placeholder is the name of the taxonomy for the object being mutated
-								return sprintf( __( 'The name of the %1$s object to mutate', 'wp-graphql' ), $taxonomy->name );
-							},
+							// translators: The placeholder is the name of the taxonomy for the object being mutated
+							'description' => sprintf( __( 'The name of the %1$s object to mutate', 'wp-graphql' ), $taxonomy->name ),
 						],
 					]
 				),
@@ -53,24 +51,17 @@ class TermObjectCreate {
 		$fields = [
 			'aliasOf'     => [
 				'type'        => 'String',
-				'description' => static function () use ( $taxonomy ) {
-					// translators: The placeholder is the name of the taxonomy for the object being mutated
-					return sprintf( __( 'The slug that the %1$s will be an alias of', 'wp-graphql' ), $taxonomy->name );
-				},
+				// translators: The placeholder is the name of the taxonomy for the object being mutated
+				'description' => sprintf( __( 'The slug that the %1$s will be an alias of', 'wp-graphql' ), $taxonomy->name ),
 			],
 			'description' => [
 				'type'        => 'String',
-				'description' => static function () use ( $taxonomy ) {
-					// translators: The placeholder is the name of the taxonomy for the object being mutated
-					return sprintf( __( 'The description of the %1$s object', 'wp-graphql' ), $taxonomy->name );
-				},
+				// translators: The placeholder is the name of the taxonomy for the object being mutated
+				'description' => sprintf( __( 'The description of the %1$s object', 'wp-graphql' ), $taxonomy->name ),
 			],
 			'slug'        => [
 				'type'        => 'String',
-				'description' => static function () use ( $taxonomy ) {
-					// translators: The placeholder is the name of the taxonomy for the object being mutated
-					return sprintf( __( 'If this argument exists then the slug will be checked to see if it is not an existing valid term. If that check succeeds (it is not a valid term), then it is added and the term id is given. If it fails, then a check is made to whether the taxonomy is hierarchical and the parent argument is not empty. If the second check succeeds, the term will be inserted and the term id will be given. If the slug argument is empty, then it will be calculated from the term name.', 'wp-graphql' ), $taxonomy->name );
-				},
+				'description' => __( 'If this argument exists then the slug will be checked to see if it is not an existing valid term. If that check succeeds (it is not a valid term), then it is added and the term id is given. If it fails, then a check is made to whether the taxonomy is hierarchical and the parent argument is not empty. If the second check succeeds, the term will be inserted and the term id will be given. If the slug argument is empty, then it will be calculated from the term name.', 'wp-graphql' ),
 			],
 		];
 
@@ -80,17 +71,13 @@ class TermObjectCreate {
 		if ( true === $taxonomy->hierarchical ) {
 			$fields['parentId']         = [
 				'type'        => 'ID',
-				'description' => static function () use ( $taxonomy ) {
-					// translators: The placeholder is the name of the taxonomy for the object being mutated
-					return sprintf( __( 'The ID of the %1$s that should be set as the parent. This field cannot be used in conjunction with parentDatabaseId', 'wp-graphql' ), $taxonomy->name );
-				},
+				// translators: The placeholder is the name of the taxonomy for the object being mutated
+				'description' => sprintf( __( 'The ID of the %1$s that should be set as the parent. This field cannot be used in conjunction with parentDatabaseId', 'wp-graphql' ), $taxonomy->name ),
 			];
 			$fields['parentDatabaseId'] = [
 				'type'        => 'Int',
-				'description' => static function () use ( $taxonomy ) {
-					// translators: The placeholder is the name of the taxonomy for the object being mutated
-					return sprintf( __( 'The database ID of the %1$s that should be set as the parent. This field cannot be used in conjunction with parentId', 'wp-graphql' ), $taxonomy->name );
-				},
+				// translators: The placeholder is the name of the taxonomy for the object being mutated
+				'description' => sprintf( __( 'The database ID of the %1$s that should be set as the parent. This field cannot be used in conjunction with parentId', 'wp-graphql' ), $taxonomy->name ),
 			];
 		}
 
@@ -108,10 +95,8 @@ class TermObjectCreate {
 		return [
 			$taxonomy->graphql_single_name => [
 				'type'        => $taxonomy->graphql_single_name,
-				'description' => static function () use ( $taxonomy ) {
-					// translators: Placeholder is the name of the taxonomy
-					return sprintf( __( 'The created %s', 'wp-graphql' ), $taxonomy->name );
-				},
+				// translators: Placeholder is the name of the taxonomy
+				'description' => sprintf( __( 'The created %s', 'wp-graphql' ), $taxonomy->name ),
 				'resolve'     => static function ( $payload, $_args, AppContext $context ) {
 					$id = isset( $payload['termId'] ) ? absint( $payload['termId'] ) : null;
 

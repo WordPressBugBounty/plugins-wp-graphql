@@ -241,7 +241,9 @@ class PostObjectMutation {
 		do_action( 'graphql_post_object_mutation_set_object_terms', $post_id, $input, $post_type_object, $mutation_name );
 
 		/**
-		 * Get the allowed taxonomies and iterate through them to find the term inputs to use for setting relationships.
+		 * Get the allowed taxonomies and iterate through them to find the term inputs to use for setting relationships
+		 *
+		 * @var \WP_Taxonomy[] $allowed_taxonomies
 		 */
 		$allowed_taxonomies = \WPGraphQL::get_allowed_taxonomies( 'objects' );
 

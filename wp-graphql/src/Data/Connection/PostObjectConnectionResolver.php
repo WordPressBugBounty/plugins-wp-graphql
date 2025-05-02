@@ -130,10 +130,10 @@ class PostObjectConnectionResolver extends AbstractConnectionResolver {
 		}
 
 		// For revisions, we only want to execute the connection query if the user has access to edit the parent post.
-		if ( $this->source instanceof Post && isset( $this->source->post_type ) ) {
+		if ( $this->source instanceof Post ) {
 			$parent_post_type_obj = get_post_type_object( $this->source->post_type );
 
-			if ( isset( $parent_post_type_obj->cap->edit_post ) && current_user_can( $parent_post_type_obj->cap->edit_post, $this->source->databaseId ) ) {
+			if ( isset( $parent_post_type_obj->cap->edit_post ) && current_user_can( $parent_post_type_obj->cap->edit_post, $this->source->ID ) ) {
 				return true;
 			}
 		}

@@ -2,7 +2,6 @@
 namespace WPGraphQL\Type;
 
 use GraphQL\Type\Definition\EnumType;
-use WPGraphQL\Registry\TypeRegistry;
 
 /**
  * Class WPEnumType
@@ -59,17 +58,6 @@ class WPEnumType extends EnumType {
 	 * @since 0.0.5
 	 */
 	private static function prepare_values( $values, $type_name ) {
-
-		// map over the values and if the description is a callable, call it
-		foreach ( $values as $key => $value ) {
-			if ( ! empty( $value['description'] ) && is_callable( $value['description'] ) ) {
-				$description = $value['description']();
-			} else {
-				$description = isset( $value['description'] ) && is_string( $value['description'] ) ? $value['description'] : '';
-			}
-			$values[ $key ]['description'] = $description ?? '';
-		}
-
 		/**
 		 * Filter all object fields, passing the $typename as a param
 		 *
@@ -77,9 +65,8 @@ class WPEnumType extends EnumType {
 		 * if ALL types with a field of a certain name needed to be adjusted, or something to that tune
 		 *
 		 * @param array<string,mixed> $values
-		 * @param string              $type_name
 		 */
-		$values = apply_filters( 'graphql_enum_values', $values, $type_name );
+		$values = apply_filters( 'graphql_enum_values', $values );
 
 		/**
 		 * Pass the values through a filter
@@ -90,23 +77,11 @@ class WPEnumType extends EnumType {
 		 * more specific overrides
 		 *
 		 * @param array<string,mixed> $values
-		 * @param string              $type_name
 		 *
 		 * @since 0.0.5
 		 */
-		$values = apply_filters( 'graphql_' . lcfirst( $type_name ) . '_values', $values, $type_name );
-		$values = apply_filters( 'graphql_' . $type_name . '_values', $values, $type_name );
-
-		// map over the values and if the description is a callable, call it
-		$values = array_map(
-			static function ( $value ) {
-				if ( ! is_array( $value ) ) {
-					$value = [ 'value' => $value ];
-				}
-				return TypeRegistry::prepare_config_for_introspection( $value );
-			},
-			$values
-		);
+		$values = apply_filters( 'graphql_' . lcfirst( $type_name ) . '_values', $values );
+		$values = apply_filters( 'graphql_' . $type_name . '_values', $values );
 
 		/**
 		 * Sort the values alphabetically by key. This makes reading through docs much easier

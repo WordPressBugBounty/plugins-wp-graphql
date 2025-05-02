@@ -158,8 +158,17 @@ class Request {
 		$this->validation_rules = $this->get_validation_rules();
 		$this->field_resolver   = $this->get_field_resolver();
 
-		// Inject the type registry into the app context.
-		$this->app_context->type_registry = $this->type_registry;
+		/**
+		 * Configure the app_context which gets passed down to all the resolvers.
+		 *
+		 * @since 0.0.4
+		 */
+		$app_context                = new AppContext();
+		$app_context->viewer        = wp_get_current_user();
+		$app_context->root_url      = get_bloginfo( 'url' );
+		$app_context->request       = ! empty( $_REQUEST ) ? $_REQUEST : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$app_context->type_registry = $this->type_registry;
+		$this->app_context          = $app_context;
 
 		$this->query_analyzer = new QueryAnalyzer( $this );
 
@@ -566,8 +575,10 @@ class Request {
 	 * Run action for a request.
 	 *
 	 * @param \GraphQL\Server\OperationParams $params OperationParams for the request.
+	 *
+	 * @return void
 	 */
-	private function do_action( OperationParams $params ): void {
+	private function do_action( OperationParams $params ) {
 
 		/**
 		 * Run an action for each request.
@@ -719,7 +730,7 @@ class Request {
 		 * @param bool $is_valid Whether the content type is valid
 		 * @param string $content_type The content type header value that was received
 		 *
-		 * @since 2.1.0
+		 * @since next-version
 		 */
 		return (bool) apply_filters( 'graphql_is_valid_http_content_type', $is_valid, $content_type );
 	}
@@ -799,8 +810,10 @@ class Request {
 	 * Determines if batch queries are enabled for the server.
 	 *
 	 * Default is to have batch queries enabled.
+	 *
+	 * @return bool
 	 */
-	private function is_batch_queries_enabled(): bool {
+	private function is_batch_queries_enabled() {
 		$batch_queries_enabled = true;
 
 		$batch_queries_setting = get_graphql_setting( 'batch_queries_enabled', 'on' );
@@ -814,13 +827,15 @@ class Request {
 		 * @param bool         $batch_queries_enabled Whether Batch Queries should be enabled
 		 * @param \GraphQL\Server\OperationParams $params Request operation params
 		 */
-		return (bool) apply_filters( 'graphql_is_batch_queries_enabled', $batch_queries_enabled, $this->params );
+		return apply_filters( 'graphql_is_batch_queries_enabled', $batch_queries_enabled, $this->params );
 	}
 
 	/**
 	 * Create the GraphQL server that will process the request.
+	 *
+	 * @return \GraphQL\Server\StandardServer
 	 */
-	private function get_server(): StandardServer {
+	private function get_server() {
 		$debug_flag = $this->get_debug_flag();
 
 		$config = new ServerConfig();
