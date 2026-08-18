@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit70251bc718150f52a8d551d8174231f3
+class ComposerStaticInitb0af73d1d5c271c508f976c6cfe2cade
 {
     public static $prefixLengthsPsr4 = array (
         'W' =>
@@ -396,6 +396,7 @@ class ComposerStaticInit70251bc718150f52a8d551d8174231f3
         'WPGraphQL\\Server\\ValidationRules\\RequireAuthentication' => __DIR__ . '/../..' . '/src/Server/ValidationRules/RequireAuthentication.php',
         'WPGraphQL\\Server\\WPHelper' => __DIR__ . '/../..' . '/src/Server/WPHelper.php',
         'WPGraphQL\\Type\\Connection\\Comments' => __DIR__ . '/../..' . '/src/Type/Connection/Comments.php',
+        'WPGraphQL\\Type\\Connection\\EnqueuedAssets' => __DIR__ . '/../..' . '/src/Type/Connection/EnqueuedAssets.php',
         'WPGraphQL\\Type\\Connection\\MenuItems' => __DIR__ . '/../..' . '/src/Type/Connection/MenuItems.php',
         'WPGraphQL\\Type\\Connection\\PostObjects' => __DIR__ . '/../..' . '/src/Type/Connection/PostObjects.php',
         'WPGraphQL\\Type\\Connection\\Taxonomies' => __DIR__ . '/../..' . '/src/Type/Connection/Taxonomies.php',
@@ -514,9 +515,9 @@ class ComposerStaticInit70251bc718150f52a8d551d8174231f3
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit70251bc718150f52a8d551d8174231f3::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit70251bc718150f52a8d551d8174231f3::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit70251bc718150f52a8d551d8174231f3::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb0af73d1d5c271c508f976c6cfe2cade::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb0af73d1d5c271c508f976c6cfe2cade::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitb0af73d1d5c271c508f976c6cfe2cade::$classMap;
 
         }, null, ClassLoader::class);
     }
