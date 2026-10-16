@@ -80,6 +80,8 @@ class CommentUpdate {
 				throw new UserError( esc_html__( 'Sorry, you are not allowed to update this comment.', 'wp-graphql' ) );
 			}
 
+			$can_moderate = current_user_can( 'moderate_comments' );
+
 			// Get the database ID for the comment.
 			$comment_id = ! empty( $input['id'] ) ? Utils::get_database_id_from_id( $input['id'] ) : null;
 
@@ -87,7 +89,23 @@ class CommentUpdate {
 			$comment_args = ! empty( $comment_id ) ? get_comment( $comment_id, ARRAY_A ) : null;
 
 			if ( empty( $comment_id ) || empty( $comment_args ) ) {
-				throw new UserError( esc_html__( 'The Comment could not be updated', 'wp-graphql' ) );
+				/**
+				 * Someone who may moderate comments is entitled to know that an ID holds nothing,
+				 * and the message is more useful to them than a refusal would be.
+				 *
+				 * Everyone else gets the same answer here as they would for a comment that exists
+				 * but is not theirs. Ownership cannot be checked before the lookup, the way the
+				 * capability can for the media item mutations, so the two outcomes are made
+				 * identical instead. Otherwise the pair of messages tells any logged-in caller
+				 * which comment IDs exist, including unapproved ones.
+				 *
+				 * @see https://github.com/wp-graphql/wp-graphql/security/advisories/GHSA-r7m4-3v6c-3435
+				 */
+				throw new UserError(
+					$can_moderate
+						? esc_html__( 'The Comment could not be updated', 'wp-graphql' )
+						: esc_html__( 'Sorry, you are not allowed to update this comment.', 'wp-graphql' )
+				);
 			}
 
 			$user_id          = $comment_args['user_id'] ?? null;
@@ -97,7 +115,7 @@ class CommentUpdate {
 			$not_allowed = true;
 
 			// If the current user can moderate comments, allow.
-			if ( current_user_can( 'moderate_comments' ) ) {
+			if ( $can_moderate ) {
 				$not_allowed = false;
 			} else {
 				// If the current user is the comment author, allow (but not for status changes).
@@ -110,9 +128,11 @@ class CommentUpdate {
 					 * WPGraphQL lets people edit their own comments. WordPress does not: its
 					 * `edit_comment` capability maps to `edit_post` on the post the comment was
 					 * left on, so editing any comment in the admin or through the REST API
-					 * requires being able to edit that post. Return false to apply WordPress's
-					 * rule here instead, which leaves `updateComment` to callers who can
-					 * moderate comments.
+					 * requires being able to edit that post. Return false to turn that off,
+					 * which leaves `updateComment` to callers who can moderate comments. Note
+					 * that this is stricter than WordPress's own rule rather than the same as
+					 * it: an author who can edit a post can edit comments left on it in the
+					 * admin, but would not be able to here.
 					 *
 					 * @param bool                $can_update   Whether the comment's author may update it. Default true.
 					 * @param array<string,mixed> $comment_args The comment as it is currently stored.
@@ -129,8 +149,6 @@ class CommentUpdate {
 				throw new UserError( esc_html__( 'Sorry, you are not allowed to update this comment.', 'wp-graphql' ) );
 			}
 
-			$can_moderate = current_user_can( 'moderate_comments' );
-
 			// Only users with moderate_comments may change moderation status (status/approved).
 			$attempting_status_change = isset( $input['status'] ) || array_key_exists( 'approved', $input );
 			if ( $attempting_status_change && ! $can_moderate ) {
@@ -146,6 +164,19 @@ class CommentUpdate {
 			 * Map all of the args from GraphQL to WordPress friendly args array
 			 */
 			CommentMutation::prepare_comment_object( $input, $comment_args, 'update', true );
+
+			// Keep the stored byline. prepare_comment_object() back-fills `author`,
+			// `authorEmail` and `authorUrl` from the caller's own account when they are
+			// left out of the input, and writes those columns either way, so an update
+			// sending only `content` would otherwise rewrite who the comment appears to
+			// have been written by. assert_only_content_changes() cannot catch that,
+			// because it only inspects values the caller actually sent.
+			//
+			// Done before the no-changes check below so that resubmitting nothing but the
+			// stored byline is still correctly reported as no change.
+			if ( ! $can_moderate ) {
+				self::keep_stored_author( $comment_args, $raw_comment_args );
+			}
 
 			// If there are no changes between the existing comment and the incoming comment
 			if ( $comment_args === $raw_comment_args ) {
@@ -259,6 +290,36 @@ class CommentUpdate {
 			if ( $incoming !== $stored ) {
 				throw new UserError( esc_html__( 'Sorry, you are not allowed to change the target, author, date, parent or type of this comment.', 'wp-graphql' ) );
 			}
+		}
+	}
+
+	/**
+	 * Restores the comment's stored author columns before it is saved.
+	 *
+	 * `CommentMutation::prepare_comment_object()` fills `author`, `authorEmail` and
+	 * `authorUrl` from the current user when the input leaves them out, then writes all
+	 * three columns. For a caller who may only edit content that is a change they are not
+	 * allowed to make: an update sending nothing but `content` would reset the byline to
+	 * whatever is on the caller's profile now, discarding a moderator's correction or a
+	 * redaction. Only the three author columns are restored, so a content edit still
+	 * saves.
+	 *
+	 * A caller who may moderate is left alone, because changing the byline is a decision
+	 * they are allowed to make.
+	 *
+	 * @param array<string,mixed> $comment_args     The comment args about to be saved, by reference.
+	 * @param array<string,mixed> $raw_comment_args The comment as it is currently stored.
+	 */
+	private static function keep_stored_author( array &$comment_args, array $raw_comment_args ): void {
+		$author_columns = [ 'comment_author', 'comment_author_email', 'comment_author_url' ];
+
+		foreach ( $author_columns as $column ) {
+			if ( ! array_key_exists( $column, $raw_comment_args ) ) {
+				// Nothing stored to restore, so leave whatever was prepared in place.
+				continue;
+			}
+
+			$comment_args[ $column ] = $raw_comment_args[ $column ];
 		}
 	}
 

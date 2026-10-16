@@ -4,7 +4,7 @@ Tags: GraphQL, Headless, REST API, Decoupled, React
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.24.1
+Stable tag: 2.24.2
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Author: WPGraphQL, WordPress.org
@@ -77,6 +77,16 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 2. WPGraphQL settings — configure the GraphQL endpoint, batch queries, query depth limiting, debug mode, and more.
 
 == Upgrade Notice ==
+
+= 2.24.2 =
+
+**Security release.** Fixes four follow-ups to the issues addressed in 2.24.1. Updating is recommended. Three of them change behavior you may be relying on.
+
+**More mutation error messages changed.** The update mutations for posts, pages and every other content type, `updateUser`, and the update and delete mutations for categories, tags and every other taxonomy now check the capability before looking the target up, so the refusal a caller without it gets no longer reveals whether the ID exists or what type of thing it held. The post update mutations also no longer echo the ID back in that message. See GHSA-5292-vhjr-6cwg. `updateComment` and `deleteComment` now give one answer to every caller who can neither moderate comments nor own the comment named, which 2.24.1 had closed only for anonymous callers (GHSA-r7m4-3v6c-3435). A client matching on any of those message strings will need updating.
+
+**A comment's byline survives a content edit.** When a comment's own author updated only the content, the stored author name, email and URL were rewritten from the editing account rather than left alone. Those three values are now kept as stored for a caller without `moderate_comments`. Moderators can still change them, as before. See GHSA-cf67-w9ww-p68v.
+
+**`createMediaItem` refuses a host whose IPv6 lookup fails.** A URL is accepted only when every address its host resolves to is public, and an AAAA lookup that errors is now treated as a failed check rather than as a host with no IPv6 address. If your resolver blocks or drops AAAA queries, a URL that previously worked will be refused. The local-use NAT64 prefix, 64:ff9b:1::/48, is rejected now as well, because the address it carries is reachable only inside the network that runs the translator. A host that reaches a public address through the well-known NAT64 prefix or 6to4 is unaffected. See GHSA-3j5r-mp5g-4wrw.
 
 = 2.24.1 =
 
@@ -339,6 +349,16 @@ The `uri` field was non-null on some Types in the Schema but has been changed to
 Composer dependencies are no longer versioned in Github. Recommended install source is WordPress.org or using Composer to get the code from Packagist.org or WPackagist.org.
 
 == Changelog ==
+
+= 2.24.2 =
+
+**Bug Fixes**
+
+* **media:** reject the local-use NAT64 prefix, and fail closed on a failed AAAA lookup ([#4460](https://github.com/wp-graphql/wp-graphql/issues/4460))
+* **mutations:** check the capability before looking up the target, in four more mutations ([#4461](https://github.com/wp-graphql/wp-graphql/issues/4461))
+* **mutations:** keep a comment's stored byline when only its content is edited ([#4458](https://github.com/wp-graphql/wp-graphql/issues/4458))
+* **mutations:** stop comment mutations telling logged-in callers which comment IDs exist ([#4459](https://github.com/wp-graphql/wp-graphql/issues/4459))
+* **release:** stop release-please rewriting changelog entries that name its annotations ([#4450](https://github.com/wp-graphql/wp-graphql/issues/4450))
 
 = 2.24.1 =
 
@@ -726,11 +746,11 @@ Composer dependencies are no longer versioned in Github. Recommended install sou
 
 **Bug Fixes**
 
-* add step to replace x-release-please-version placeholders during deployment
+* add step to replace x-release-please version placeholders during deployment
 * **deps:** bump webonyx/graphql-php from 15.29.4 to 15.30.0 in /plugins/wp-graphql in the composer-minor-patch group across 1 directory ([#3521](https://github.com/wp-graphql/wp-graphql/issues/3521))
 * nodeByUri returns null for REST API endpoints and static file paths ([#3530](https://github.com/wp-graphql/wp-graphql/issues/3530))
 * Prevent password from being changed when updating user without password field ([#3532](https://github.com/wp-graphql/wp-graphql/issues/3532))
-* replace x-release-please-version placeholders with 2.24.1
+* replace x-release-please version placeholders with 2.7.0
 * use clean build directory for WordPress.org deployment ([#3502](https://github.com/wp-graphql/wp-graphql/issues/3502))
 
 = 2.7.0 =
