@@ -365,6 +365,7 @@ class ComposerStaticInitb45b53a4bc020ab810acb17cefce2999
         'WPGraphQL\\Model\\Menu' => __DIR__ . '/../..' . '/src/Model/Menu.php',
         'WPGraphQL\\Model\\MenuItem' => __DIR__ . '/../..' . '/src/Model/MenuItem.php',
         'WPGraphQL\\Model\\Model' => __DIR__ . '/../..' . '/src/Model/Model.php',
+        'WPGraphQL\\Model\\NodeContext' => __DIR__ . '/../..' . '/src/Model/NodeContext.php',
         'WPGraphQL\\Model\\Plugin' => __DIR__ . '/../..' . '/src/Model/Plugin.php',
         'WPGraphQL\\Model\\Post' => __DIR__ . '/../..' . '/src/Model/Post.php',
         'WPGraphQL\\Model\\PostType' => __DIR__ . '/../..' . '/src/Model/PostType.php',

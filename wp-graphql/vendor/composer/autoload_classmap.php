@@ -334,6 +334,7 @@ return array(
     'WPGraphQL\\Model\\Menu' => $baseDir . '/src/Model/Menu.php',
     'WPGraphQL\\Model\\MenuItem' => $baseDir . '/src/Model/MenuItem.php',
     'WPGraphQL\\Model\\Model' => $baseDir . '/src/Model/Model.php',
+    'WPGraphQL\\Model\\NodeContext' => $baseDir . '/src/Model/NodeContext.php',
     'WPGraphQL\\Model\\Plugin' => $baseDir . '/src/Model/Plugin.php',
     'WPGraphQL\\Model\\Post' => $baseDir . '/src/Model/Post.php',
     'WPGraphQL\\Model\\PostType' => $baseDir . '/src/Model/PostType.php',
